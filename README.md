@@ -15,7 +15,7 @@ Bosquejo en **Kotlin puro / JVM**: sin Android SDK ni frameworks externos, solo 
 | `Seguimiento` | data class (asociativa) | Usuario ↔ Título: estado, progreso, puntuación, favorito |
 | `EstadoSeguimiento` | enum | PENDIENTE, VIENDO, COMPLETADO, ABANDONADO |
 
-Diagrama de clases: [`docs/AniList.puml`](docs/AniList.puml) (PlantUML).
+Diagrama de clases: ![imagen.png](https://raw.githubusercontent.com/parzibyte/WaterPy/master/assets/ImagenV1.png)
 
 ## Requisitos
 
