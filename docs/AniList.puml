@@ -1,0 +1,99 @@
+@startuml AniList
+title AniList - Diagrama de clases
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+
+enum EstadoSeguimiento {
+  PENDIENTE
+  VIENDO
+  COMPLETADO
+  ABANDONADO
+  --
+  etiqueta: String
+}
+
+class Usuario {
+  + id: Int
+  + nombre: String
+  --
+  + seguimientos: List<Seguimiento>
+  + favoritos: List<TituloAudiovisual>
+  --
+  + seguir(titulo, estado): Seguimiento
+  + buscarSeguimiento(titulo): Seguimiento?
+  + porEstado(estado): List<Seguimiento>
+  + porGenero(genero): List<Seguimiento>
+  + recomendaciones(catalogo): List<TituloAudiovisual>
+}
+
+abstract class TituloAudiovisual {
+  + id: Int
+  + nombre: String
+  + sinopsis: String?
+  + tipo: Tipo
+  + generos: Set<Genero>
+  + seguimientos: List<Seguimiento>
+  + puntuacionPromedio: Double?
+  --
+  + {abstract} unidadProgreso: String
+  + {abstract} totalUnidades: Int?
+  + {abstract} descripcionCorta(): String
+  + agregarGenero(genero): Boolean
+  ~ registrarSeguimiento(seguimiento)
+}
+
+class Anime {
+  + episodios: Int?
+  + estudio: String?
+  --
+  + descripcionCorta(): String
+}
+
+class Manga {
+  + capitulos: Int?
+  + autor: String?
+  --
+  + descripcionCorta(): String
+}
+
+class Tipo <<data>> {
+  + nombre: String
+}
+
+class Genero <<data>> {
+  + nombre: String
+}
+
+class Seguimiento <<data, asociativa>> {
+  + usuario: Usuario
+  + titulo: TituloAudiovisual
+  + estado: EstadoSeguimiento
+  + progreso: Int
+  + puntuacion: Int?
+  + favorito: Boolean
+  --
+  + avanzar(unidades: Int)
+  + puntuar(valor: Int)
+  + alternarFavorito()
+  + abandonar()
+}
+
+' Herencia
+TituloAudiovisual <|-- Anime
+TituloAudiovisual <|-- Manga
+
+' Relaciones con la clase asociativa
+Usuario "1" -- "0..*" Seguimiento : realiza
+TituloAudiovisual "1" -- "0..*" Seguimiento : es seguido en
+(Usuario, TituloAudiovisual) .. Seguimiento
+
+' Relaciones del título
+TituloAudiovisual "0..*" -- "1" Tipo : tiene
+TituloAudiovisual "0..*" -- "1..*" Genero : clasificado en
+
+' Uso del enum
+Seguimiento --> EstadoSeguimiento
+
+@enduml
